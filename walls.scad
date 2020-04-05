@@ -30,9 +30,10 @@ face_scale = [0.9, 1.1, 0.75];
 face_top_scale = [0.9, 1.1, 0.75];
 
 // scale for left, right sides of tooths
-face_side_scale = [0.9, 1.1, 1.19];
+face_side_scale = [0.9, 1.12, 1.19];
 
-wall(2);
+wall(1);
+
 
 module crenelated_line(cnt) {
     for(c=[0:cnt-1]) {
@@ -244,6 +245,9 @@ module wall(l, crenelated = 0) {
 
 
 
+
+
+
 // flat sides (bottom side - always flat):
 // 1 - left
 // 2 - right
@@ -254,9 +258,9 @@ module wall(l, crenelated = 0) {
 // 7 - top / left / right
 module brick(s=0, v=1, half=0, offset=0) {
     
-    fullScale = [1.01 - ((s_brick[0])/100 * offset),face_height,1];
+    fullScale = [1 - ((s_brick[0])/100 * offset),1.11,face_height];
     // result sacles (after rotating transforms): Z, Y, X
-    halfScale = [0.72,face_height,0.67 - (s_brick[0]/100 * offset)];
+    halfScale = [0.7,0.8 - (s_brick[0]/100 * offset*1.6),face_height];
     
     // core    
     if(half == 1) {
@@ -268,49 +272,54 @@ module brick(s=0, v=1, half=0, offset=0) {
     
     // front
     if(half == 1) {
-        translate([0,0,s_brick[2]]) rotate([0,90,0]) set_face(v+1, halfScale);
+        translate([0,0,s_brick[2]]) rotate([90,90,0]) set_face(v+1, halfScale);
     } else {
-        set_face(v+1, fullScale);
+        rotate([90,0,0]) set_face(v+1, fullScale);
     }
         
+    
     // back
     if(half == 1) {
-        translate([0, s_brick[1], 0]) rotate([0,-90,180]) set_face(v+2, halfScale);  
+        translate([0, s_brick[1], 0]) rotate([90,-90,180]) set_face(v+2, halfScale);  
     } else {
-        translate([s_brick[0] - offset, s_brick[1], 0]) rotate([0,0,180]) set_face(v+2, fullScale);
+        translate([s_brick[0] - offset, s_brick[1], 0]) rotate([90,0,180]) set_face(v+2, fullScale);
     }
+    
     
     if(s!=1 && s!=3 && s!=5 && s!=7) {
         // left
         translate([0, s_brick[1], 0]) {
-            rotate([0,0,-90]) set_face(v+3, [0.82,face_height,1]);
+            rotate([90,0,-90]) set_face(v+3, [0.82,face_height,1]);
         }
     }
+    
     
     if(s!=2 && s!=3 && s!=6 && s!=7) {
         // right
         if(half == 1) {
             translate([s_brick[0]/2 - offset, 0, 0]) {
-                rotate([0,0,90]) set_face(v+4,[0.82,face_height,1]);
+                rotate([90,0,90]) set_face(v+4,[0.82,face_height,1]);
             }
         } else {
             translate([s_brick[0] - offset, 0, 0]) {
-                rotate([0,0,90]) set_face(v+4,[0.82,face_height,1]);
+                rotate([90,0,90]) set_face(v+4,[0.82,face_height,1]);
             }
         }
     }
+    
     if(s<4) {
         // top
         if(half == 1) {
             translate([s_brick[0]/2 - offset, 0, s_brick[2]]) {
-                color("green") rotate([-90,0,90]) set_face(v+5, [0.82,face_height+0.2, 0.70 - (s_brick[0]/100 * offset)]);
+                color("green") rotate([0,0,90]) set_face(v+5, [0.82, 0.79 - (s_brick[0]/100 * offset * 1.56),face_height+0.2]);
             }
         } else {
             translate([0, 0, s_brick[2]]) {
-                color("green") rotate([-90,0,0]) set_face(v+5, [1 - (s_brick[0]/100 * offset), face_height+0.2, 1.16]);
+                color("green") set_face(v+5, [1.008 - (s_brick[0]/100 * offset), face_height+0.2, 1.16]);
             }
         }
     }
+    
         
 }
 
@@ -422,10 +431,11 @@ module rand_face(seed) {
 
 module static_face(num) {
 
-  n = num > 10 || num < 1 ? floor(rands(1,10,1)[0]) : num;
+  n = num > 20 || num < 1 ? floor(rands(1,20,1)[0]) : num;
     
-  filename = str("faces/face_", n, ".stl");
+  filename = str("textures/stone-", n, ".png");
   echo(filename);
-  import(filename);
+    
+  scale([0.1255,0.19,0.04]) translate([0,0,-3.5]) surface(file=filename, convexity=1);
   
 }
