@@ -32,7 +32,8 @@ face_top_scale = [0.9, 1.1, 0.75];
 // scale for left, right sides of tooths
 face_side_scale = [0.9, 1.12, 1.19];
 
-wall(1);
+//wall(1);
+brick(0,1,0,0);
 
 
 module crenelated_line(cnt) {
@@ -436,6 +437,6 @@ module static_face(num) {
   filename = str("textures/stone-", n, ".png");
   echo(filename);
     
-  scale([0.1255,0.19,0.04]) translate([0,0,-3.5]) surface(file=filename, convexity=1);
+  scale([0.1255,0.19,0.025]) translate([0,0,-3.5]) surface(file=filename, convexity=1);
   
 }
